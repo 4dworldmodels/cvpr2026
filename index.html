@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="4D World Models: Bridging Generation and Reconstruction - CVPR 2026 Workshop">
+  <meta name="keywords" content="4D, NeRF, Gaussian Splatting, 3D Reconstruction, Generation, CVPR Workshop">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>4D World Models: Bridging Generation and Reconstruction | CVPR 2026 Workshop</title>
+  <link rel="shortcut icon" href="./asset/images/block.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.min.js"></script>
+  
+  <style>
+    .profile-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(100, 200, 255, 0.3);
+    }
+
+    .profile-image {
+      width: 140px;
+      height: 140px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 2px solid rgba(100, 200, 255, 0.2);
+      display: block;
+    }
+
+    .profile-name {
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .profile-affiliation {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 0.75rem;
+    }
+
+    .profile-links {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .profile-link {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      background: rgba(100, 200, 255, 0.1);
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .profile-link:hover {
+      background: rgba(100, 200, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .title-icon {
+      font-size: 1.5em;
+    }
+
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      padding: 2rem 0;
+      justify-items: center;
+      justify-content: center;
+    }
+
+    .workshop-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+      font-size: 1.1rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .abstract-box {
+      background: rgba(100, 150, 255, 0.05);
+      border-left: 4px solid rgba(100, 200, 255, 0.5);
+      padding: 2rem;
+      border-radius: 8px;
+      margin: 2rem 0;
+    }
+
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .topic-item {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border-left: 3px solid rgba(100, 200, 255, 0.5);
+    }
+
+    .topic-item strong {
+      color: rgba(100, 200, 255, 0.9);
+    }
+
+    .placeholder-image {
+      width: 140px;
+      height: 140px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(100, 200, 255, 0.1), rgba(150, 100, 255, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      margin-bottom: 1rem;
+      border: 2px dashed rgba(100, 200, 255, 0.2);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .speakers-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .organizers-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Animated Background -->
+<div class="animated-bg"></div>
+
+<!-- Hero Section -->
+<section class="hero hero-gradient">
+  <div class="hero-body hero-custom">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title main-title" style="margin-bottom: 2rem;">
+            <span class="gradient-text">4D World Models:</span> <br>
+            <span class="highlight-text" style="white-space: nowrap;">Bridging Generation and Reconstruction</span>
+          </h1>
+          <p class="subtitle is-4" style="margin-bottom: 2rem; color: #aaa;">CVPR 2026 Workshop</p>
+          
+          <div class="workshop-meta">
+            <div class="meta-item">
+              <span class="icon"><i class="fas fa-calendar"></i></span>
+              <span>CVPR 2026</span>
+            </div>
+            <div class="meta-item">
+              <span class="icon"><i class="fas fa-users"></i></span>
+              <span>100-300 Attendees</span>
+            </div>
+            <div class="meta-item">
+              <span class="icon"><i class="fas fa-clock"></i></span>
+              <span>Half-Day Workshop</span>
+            </div>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links fancy-buttons">
+              <!-- Speakers Link -->
+              <span class="link-block">
+                <a href="#speakers"
+                  class="external-link button is-medium is-rounded fancy-btn btn-pdf">
+                  <span class="icon">
+                      <i class="fas fa-users"></i>
+                  </span>
+                  <span>Speakers</span>
+                </a>
+              </span>
+
+              <!-- Call for Papers -->
+              <span class="link-block">
+                <a href="#cfp"
+                  class="external-link button is-medium is-rounded fancy-btn btn-code">
+                  <span class="icon">
+                      <i class="fas fa-pencil-alt"></i>
+                  </span>
+                  <span>Call for Papers</span>
+                </a>
+              </span>
+
+              <!-- More Information -->
+              <span class="link-block">
+                <a href="#about"
+                  class="external-link button is-medium is-rounded fancy-btn btn-arxiv">
+                  <span class="icon">
+                      <i class="fas fa-info-circle"></i>
+                  </span>
+                  <span>About</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="section" id="about">
+  <div style="max-width: 900px; margin: 0 auto; padding: 0 1.5rem;">
+    <h2 class="title is-2 section-title">
+      <span class="title-icon">📋</span> About the Workshop
+    </h2>
+    
+    <div class="abstract-box">
+      <p style="margin-bottom: 1.5rem;">
+        This workshop focuses on <strong>4D reconstruction and generation</strong>, bridging the gap between reconstructing and generating dynamic virtual worlds. 
+        The workshop brings together researchers working on neural representations, dynamic scene understanding, and efficient rendering for AR/VR and robotics applications.
+      </p>
+
+      <h3 class="subtitle is-5" style="margin: 1.5rem 0 0.75rem 0;"><strong>Workshop Topics:</strong></h3>
+      <div class="topics-grid">
+        <div class="topic-item"><strong>4D Reconstruction & Generation</strong> - Neural representations and dynamic scene synthesis</div>
+        <div class="topic-item"><strong>Neural Representations</strong> - NeRFs, 3D Gaussian Splatting, and hybrid methods</div>
+        <div class="topic-item"><strong>Efficient Rendering</strong> - Real-time visualization for interactive applications</div>
+        <div class="topic-item"><strong>Virtual Humans</strong> - Photo-realistic avatars and human performance capture</div>
+        <div class="topic-item"><strong>Applications</strong> - XR, robotics, autonomous systems, digital twins</div>
+        <div class="topic-item"><strong>Temporal Coherence</strong> - Spatio-temporal modeling and consistency</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <h3 class="subtitle is-4" style="margin: 1.5rem 0 1rem 0;"><strong>Key Dates:</strong></h3>
+      <div class="content">
+        <ul>
+          <li><strong>Submission Start:</strong> February 20, 2026</li>
+          <li><strong>Submission Deadline:</strong> March 17, 2026</li>
+          <li><strong>Reviews & Decisions:</strong> March 31, 2026</li>
+          <li><strong>Camera Ready:</strong> April 7, 2026</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call for Papers Section -->
+<section class="section" id="cfp">
+  <div style="max-width: 900px; margin: 0 auto; padding: 0 1.5rem;">
+    <h2 class="title is-2 section-title">
+      <span class="title-icon">📢</span> Call for Papers
+    </h2>
+    
+    <div class="abstract-box">
+      <h3 class="subtitle is-4" style="margin-bottom: 1rem;"><strong>We invite submissions on:</strong></h3>
+      
+      <div class="content">
+        <ul style="margin-left: 1.5rem;">
+          <li><strong>4D Reconstruction and Generation:</strong> Methods for reconstructing or generating dynamic 3D scenes from multi-view videos, single videos, or text/image prompts</li>
+          <li><strong>Neural Representations:</strong> Novel neural scene representations including NeRFs, 3D Gaussian Splatting, and hybrid approaches for dynamic scenes</li>
+          <li><strong>Temporal Coherence:</strong> Techniques for maintaining consistency across time in dynamic 3D reconstructions and generations</li>
+          <li><strong>Efficient Rendering:</strong> Real-time and low-latency rendering methods for 4D content in AR/VR and robotics</li>
+          <li><strong>Human Avatars:</strong> Photo-realistic, animatable avatars and human performance capture</li>
+          <li><strong>Applications:</strong> Novel applications in XR, robotics, autonomous driving, digital twins, and creative industries</li>
+          <li><strong>Datasets and Benchmarks:</strong> New datasets, evaluation metrics, and benchmarks for 4D vision tasks</li>
+        </ul>
+      </div>
+
+      <h3 class="subtitle is-4" style="margin: 2rem 0 1rem 0;"><strong>Submission Types:</strong></h3>
+      <div class="content">
+        <ul style="margin-left: 1.5rem;">
+          <li><strong>Full Papers:</strong> Novel research contributions (up to 8 pages + references)</li>
+          <li><strong>Extended Abstracts:</strong> Work-in-progress, position papers, or recently published work (up to 4 pages + references)</li>
+          <li><strong>Dataset Papers:</strong> Novel datasets with benchmarks and baselines</li>
+        </ul>
+      </div>
+
+      <h3 class="subtitle is-4" style="margin: 2rem 0 1rem 0;"><strong>Important Dates:</strong></h3>
+      <div class="content">
+        <ul style="margin-left: 1.5rem;">
+          <li><strong>Submission Opens:</strong> February 20, 2026</li>
+          <li><strong>Submission Deadline:</strong> <span style="color: rgba(100, 200, 255, 0.9);">March 17, 2026 (11:59 PM AoE)</span></li>
+          <li><strong>Author Notification:</strong> March 31, 2026</li>
+          <li><strong>Camera-Ready Deadline:</strong> April 7, 2026</li>
+          <li><strong>Workshop Date:</strong> CVPR 2026 (June 2026)</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(100, 200, 255, 0.1); border-radius: 8px;">
+        <p style="margin: 0;"><strong>Submission Portal:</strong> Papers will be reviewed through <strong>OpenReview</strong></p>
+        <p style="margin: 0.5rem 0 0 0; font-size: 0.95rem; color: #aaa;">All submissions will undergo peer review. Accepted papers will be presented as posters or spotlight talks at the workshop.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Invited Speakers Section -->
+<section class="section" id="speakers">
+  <div class="speakers-container">
+    <h2 class="title is-2 section-title">
+      <span class="title-icon">🎤</span> Invited Speakers
+    </h2>
+    <p style="text-align: center; margin-bottom: 2rem; color: #aaa;">
+      Distinguished researchers in 4D vision, neural rendering, and dynamic scene understanding
+    </p>
+
+    <div class="people-grid">
+      <!-- Speaker 1: Peter Kontschieder -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Peter Kontschieder</div>
+        <div class="profile-affiliation">Meta Reality Labs<br/>Research Director</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Speaker 2: Sara Fridovich-Keil -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Sara Fridovich-Keil</div>
+        <div class="profile-affiliation">Georgia Tech<br/>Assistant Professor</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Speaker 3: Youngjoong Kwon -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Youngjoong Kwon</div>
+        <div class="profile-affiliation">Emory University<br/>Assistant Professor</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Speaker 4: Qianqian Wang -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Qianqian Wang</div>
+        <div class="profile-affiliation">Harvard University<br/>Assistant Professor</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Speaker 5: Jiahui Lei -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Jiahui Lei</div>
+        <div class="profile-affiliation">UC Berkeley<br/>Post-Doc</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Speaker 6: Pratul Srinivasan -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Pratul Srinivasan</div>
+        <div class="profile-affiliation">Google DeepMind<br/>Research Scientist</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Senior Organizers Section -->
+<section class="section">
+  <div class="organizers-container">
+    <h2 class="title is-2 section-title">
+      <span class="title-icon">👥</span> Senior Organizers
+    </h2>
+    <p style="text-align: center; margin-bottom: 2rem; color: #aaa;">
+      Leading researchers organizing the workshop
+    </p>
+
+    <div class="people-grid">
+      <!-- Organizer 1: Fernando De la Torre -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Fernando De la Torre</div>
+        <div class="profile-affiliation">CMU<br/>Research Professor</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Organizer 2: Angela Dai -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Angela Dai</div>
+        <div class="profile-affiliation">TU Munich<br/>Associate Professor</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Organizer 3: Srinath Sridhar -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Srinath Sridhar</div>
+        <div class="profile-affiliation">Brown University<br/>Assistant Professor</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Organizer 4: Xiaowei Zhou -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Xiaowei Zhou</div>
+        <div class="profile-affiliation">Zhejiang University<br/>Professor</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Organizer 5: Lingjie Liu -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Lingjie Liu</div>
+        <div class="profile-affiliation">University of Pennsylvania<br/>Assistant Professor</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Organizer 6: Aayush Prakash -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Aayush Prakash</div>
+        <div class="profile-affiliation">Meta Reality Labs<br/>Research Manager</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Organizer 7: Nikolaos Sarafianos -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Nikolaos Sarafianos</div>
+        <div class="profile-affiliation">Meta Reality Labs<br/>Research Scientist</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Organizer 8: Jonathon Luiten -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Jonathon Luiten</div>
+        <div class="profile-affiliation">Meta Reality Labs<br/>Research Scientist</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Junior Organizers Section -->
+<section class="section">
+  <div class="organizers-container">
+    <h2 class="title is-2 section-title">
+      <span class="title-icon">⭐</span> Junior Organizers
+    </h2>
+    <p style="text-align: center; margin-bottom: 2rem; color: #aaa;">
+      Graduate students contributing to workshop organization
+    </p>
+
+    <div class="people-grid">
+      <!-- Junior Organizer 1: Chaerin Min -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Chaerin Min</div>
+        <div class="profile-affiliation">Brown University<br/>PhD Student</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Junior Organizer 2: Aashish Rai -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Aashish Rai</div>
+        <div class="profile-affiliation">Brown University<br/>PhD Student</div>
+        <div class="profile-links">
+          <a href="https://aashishrai3799.github.io" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Junior Organizer 3: Angela Xing -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Angela Xing</div>
+        <div class="profile-affiliation">Research Assistant<br/>PhD Student</div>
+        <div class="profile-links">
+          <a href="https://xing-angela.github.io" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Junior Organizer 4: Xiaoyan Cong -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Xiaoyan Cong</div>
+        <div class="profile-affiliation">Brown University<br/>PhD Student</div>
+        <div class="profile-links">
+          <a href="https://oliver-cong02.github.io" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Junior Organizer 5: Zekun Li -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Zekun Li</div>
+        <div class="profile-affiliation">Brown University<br/>PhD Student</div>
+        <div class="profile-links">
+          <a href="https://kunkun0w0.github.io" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Junior Organizer 6: Rao Fu -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Rao Fu</div>
+        <div class="profile-affiliation">Brown University<br/>PhD Student</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+
+      <!-- Junior Organizer 7: Yiqing Liang -->
+      <div class="profile-card">
+        <div class="placeholder-image">Photo</div>
+        <div class="profile-name">Yiqing Liang</div>
+        <div class="profile-affiliation">Brown University<br/>PhD Student</div>
+        <div class="profile-links">
+          <a href="#" class="profile-link" title="Website"><i class="fas fa-globe"></i></a>
+          <a href="#" class="profile-link" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer fancy-footer">
+  <div class="container">
+    <div class="content has-text-centered footer-content">
+      <div class="footer-text">
+        <p class="footer-copyright">
+          4D World Models Workshop • CVPR 2026<br/>
+          © All Rights Reserved
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
